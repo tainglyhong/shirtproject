@@ -63,6 +63,17 @@
     .cart-content h2 {
         margin-bottom: 20px;
     }
+
+    .cart-count {
+        position: absolute;
+        top: -1px;
+        right: -3px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 4px 8px;
+        font-size: 12px;
+    }
 </style>
 
 <body>
@@ -127,8 +138,14 @@
 
                     <!-- Cart Icon -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('cart.index')}}" id="cartIcon" style="position: relative;">
+                        <a class="nav-link" href="{{ route('cart.index') }}" id="cartIcon" style="position: relative;">
                             <i class="bi bi-basket" style="font-size: 1.5rem;"></i>
+
+                            <!-- Cart Count Badge -->
+                            @if (session('cart') && count(session('cart')) > 0)
+                                <span
+                                    class="badge cart-count">{{ array_sum(array_column(session('cart'), 'quantity')) }}</span>
+                            @endif
                         </a>
                     </li>
                 </ul>
@@ -192,17 +209,18 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const cartIcon = document.getElementById('cartIcon');
+        // const cartDrawerToggle = document.getElementById('cartDrawerToggle');
         const cartDrawer = document.getElementById('cartDrawer');
 
-        cartIcon.addEventListener('click', function(event) {
+        // Toggle the drawer when the button is clicked
+        cartDrawerToggle.addEventListener('click', function(event) {
             event.preventDefault();
             cartDrawer.classList.toggle('active');
         });
 
         // Optional: Close cart drawer when clicking outside of it
         document.addEventListener('click', function(event) {
-            if (!cartDrawer.contains(event.target) && !cartIcon.contains(event.target)) {
+            if (!cartDrawer.contains(event.target) && !cartDrawerToggle.contains(event.target)) {
                 cartDrawer.classList.remove('active');
             }
         });

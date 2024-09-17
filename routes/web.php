@@ -15,6 +15,8 @@ Route::get('/', function () {
 Route::get('/Shop', [AdminController::class, 'shop'])->name('Shop');
 Route::get('/products/select/{id}', [ProductController::class, 'select'])->name('Products.select');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
+
 
 
 

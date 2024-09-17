@@ -47,8 +47,15 @@
 
             <!-- Add to Cart Button -->
             <div class="add-to-cart">
-                <button class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+                <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="quantity" id="quantity-input" value="1">
+                    <input type="hidden" name="size" id="size-select" value="M">
+                    <!-- Default value for demo -->
+                    <button type="submit" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+                </form>
             </div>
+
         </div>
     </div>
 </x-navbar>
