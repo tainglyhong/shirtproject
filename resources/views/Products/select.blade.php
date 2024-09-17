@@ -10,8 +10,6 @@
             <!-- Product Pricing -->
             <div class="product-pricing">
                 <span class="original-price">${{ number_format($product->price, 2) }}</span>
-                {{-- <span class="discount-price">-${{ $product->discount_percentage }}%</span>
-                <span class="final-price">${{ number_format($product->price, 2) }}</span> --}}
             </div>
 
             <!-- Product Image & Color Info -->
