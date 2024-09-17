@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -12,17 +13,9 @@ Route::get('/', function () {
 });
 
 Route::get('/Shop', [AdminController::class, 'shop'])->name('Shop');
-Route::get('/products/show/{id}', [ProductController::class, 'show'])->name('Products.show');
-Route::get('/checkout', action: [CheckoutController::class, 'showCheckoutForm'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'processCheckout']);
-// routes/web.php
-Route::get('/checkout/success', function () {
-    return view('checkout-success');
-})->name('checkout.success');
+Route::get('/products/select/{id}', [ProductController::class, 'select'])->name('Products.select');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
-Route::get('/checkout/cancel', function () {
-    return view('checkout-cancel');
-})->name('checkout.cancel');
 
 
 

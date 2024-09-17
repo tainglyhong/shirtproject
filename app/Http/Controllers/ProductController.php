@@ -13,21 +13,21 @@ class ProductController extends Controller
     {
         return view('Products.create');
     }
-    public function show($id)
+    public function select($id)
     {
         $product = Product::find($id);
         // Prepare additional data
         $product->available_sizes = ['S', 'M', 'L', 'XL']; // Example sizes
 
-        return view('Products.show', ['product' => $product]);
+        return view('Products.select', ['product' => $product]);
     }
+    
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-
             'image' => 'required|image|max:2048',
         ]);
 

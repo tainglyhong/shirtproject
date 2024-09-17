@@ -127,30 +127,8 @@
 
                     <!-- Cart Icon -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="cartIcon" style="position: relative;">
+                        <a class="nav-link" href="{{route('cart.index')}}" id="cartIcon" style="position: relative;">
                             <i class="bi bi-basket" style="font-size: 1.5rem;"></i>
-                            <!-- Cart Drawer -->
-                            <div id="cartDrawer" class="cart-drawer">
-                                <div class="cart-content">
-                                    <h2>Your Cart</h2>
-                                    @if (count(session('cart', [])) > 0)
-                                        @foreach (session('cart', []) as $item)
-                                            <div class="cart-item">
-                                                <p><strong>{{ $item['name'] }}</strong></p>
-                                                <p>Quantity: {{ $item['quantity'] }}</p>
-                                                <p>Price: ${{ $item['price'] }}</p>
-                                                <hr>
-                                            </div>
-                                        @endforeach
-                                        <a href="{{ route('checkout') }}" class="btn btn-primary">Proceed to
-                                            Checkout</a>
-                                    @else
-                                        <p>Your cart is empty.</p>
-                                        <a href="{{ route('Shop') }}" class="btn btn-primary">Shop Now</a>
-                                    @endif
-                                </div>
-                            </div>
-
                         </a>
                     </li>
                 </ul>

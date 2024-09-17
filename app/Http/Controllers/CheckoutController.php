@@ -23,9 +23,9 @@ class CheckoutController extends Controller
             'line_items' => [
                 [
                     'price_data' => [
-                        'currency' => 'usd',
+                        'currency' => '$',
                         'product_data' => [
-                            'name' => 'T-shirt',
+                            'name' => '{{$pro}}',
                         ],
                         'unit_amount' => 2000, // Price in cents
                     ],
