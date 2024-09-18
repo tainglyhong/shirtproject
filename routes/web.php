@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,14 +13,30 @@ Route::get('/', function () {
     return view('index');
 });
 
+// shop page
 Route::get('/Shop', [AdminController::class, 'shop'])->name('Shop');
 Route::get('/products/select/{id}', [ProductController::class, 'select'])->name('Products.select');
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+// cart page
+// Add to Cart
 Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
 
+// Update Cart Item
+Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
+// Remove from Cart
+Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
+// View Cart
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
+Route::post('/checkout/create-session', [StripeController::class, 'createSession'])->name('checkout.createSession');
+Route::get('/checkout/success', function () {
+    return view('checkout-success');
+})->name('checkout.success');
+Route::get('/checkout/cancel', function () {
+    return view('checkout-cancel');
+})->name('checkout.cancel');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -1,3 +1,4 @@
+{{-- detail item page --}}
 <x-navbar>
     <div class="container product-container">
         <div class="product-detail">
@@ -22,7 +23,7 @@
             <!-- Size Selection -->
             <div class="product-size">
                 <h4>Size</h4>
-                <select class="size-select form-control">
+                <select class="size-select form-control" id="size-select" name="size">
                     <option value="">Select available size</option>
                     @foreach ($product->available_sizes as $size)
                         <option value="{{ $size }}">{{ $size }}</option>
@@ -36,10 +37,9 @@
             <div class="quantity-selector">
                 <h4>Qty</h4>
                 <div class="qty-buttons">
-                    <button class="btn qty-decrease" onclick="decreaseQuantity()">-</button>
-                    <input type="number" id="quantity-input" name="quantity" value="1" min="1"
-                        class="qty-input no-arrows">
-                    <button class="btn qty-increase" onclick="increaseQuantity()">+</button>
+                    <button class="btn qty-decrease" type="button" onclick="decreaseQuantity()">-</button>
+                    <input type="number" id="quantity-input" name="quantity" value="1" min="1" class="qty-input no-arrows">
+                    <button class="btn qty-increase" type="button" onclick="increaseQuantity()">+</button>
                 </div>
             </div>
 
@@ -47,34 +47,54 @@
             <div class="add-to-cart">
                 <form action="{{ route('cart.add', $product->id) }}" method="POST">
                     @csrf
-                    <input type="hidden" name="quantity" id="quantity-input" value="1">
-                    <input type="hidden" name="size" id="size-select" value="M">
-                    <!-- Default value for demo -->
+                    <input type="hidden" name="size" id="hidden-size">
+                    <input type="hidden" name="quantity" id="hidden-quantity">
+                    <!-- These hidden inputs will be updated by JavaScript -->
                     <button type="submit" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
                 </form>
             </div>
-
         </div>
     </div>
 </x-navbar>
 
-<!-- JavaScript for Quantity Buttons -->
+<!-- JavaScript for Quantity and Size Handling -->
 <script>
-    function increaseQuantity() {
-        let qtyInput = document.getElementById('quantity-input');
-        let currentQty = parseInt(qtyInput.value);
-        if (!isNaN(currentQty)) {
-            qtyInput.value = currentQty + 1;
-        }
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const sizeSelect = document.getElementById('size-select');
+        const quantityInput = document.getElementById('quantity-input');
+        const hiddenSize = document.getElementById('hidden-size');
+        const hiddenQuantity = document.getElementById('hidden-quantity');
 
-    function decreaseQuantity() {
-        let qtyInput = document.getElementById('quantity-input');
-        let currentQty = parseInt(qtyInput.value);
-        if (!isNaN(currentQty) && currentQty > 1) {
-            qtyInput.value = currentQty - 1;
+        function updateHiddenFields() {
+            hiddenSize.value = sizeSelect.value;
+            hiddenQuantity.value = quantityInput.value;
         }
-    }
+
+        sizeSelect.addEventListener('change', updateHiddenFields);
+        quantityInput.addEventListener('change', updateHiddenFields);
+        
+        // Set initial values
+        updateHiddenFields();
+
+        // JavaScript for Quantity Buttons
+        window.increaseQuantity = function() {
+            let qtyInput = document.getElementById('quantity-input');
+            let currentQty = parseInt(qtyInput.value);
+            if (!isNaN(currentQty)) {
+                qtyInput.value = currentQty + 1;
+                updateHiddenFields();
+            }
+        };
+
+        window.decreaseQuantity = function() {
+            let qtyInput = document.getElementById('quantity-input');
+            let currentQty = parseInt(qtyInput.value);
+            if (!isNaN(currentQty) && currentQty > 1) {
+                qtyInput.value = currentQty - 1;
+                updateHiddenFields();
+            }
+        };
+    });
 </script>
 
 <!-- CSS Styling -->
@@ -142,6 +162,30 @@
     .product-size h4 {
         font-size: 18px;
         margin-bottom: 10px;
+    }
+
+    /* Styles for the cart table */
+    .qty-input {
+        width: 60px;
+        text-align: center;
+    }
+
+    .cart-actions {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .quantity-selector {
+        display: flex;
+        gap: 10px;
+    }
+
+    .qty-increase,
+    .qty-decrease {
+        background-color: #ddd;
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+        cursor: pointer;
     }
 
     .size-select {
