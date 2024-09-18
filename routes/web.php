@@ -25,18 +25,21 @@ Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
 // Remove from Cart
-Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 // View Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
+
 Route::post('/checkout/create-session', [StripeController::class, 'createSession'])->name('checkout.createSession');
-Route::get('/checkout/success', function () {
-    return view('checkout-success');
-})->name('checkout.success');
+// routes/web.php
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
 Route::get('/checkout/cancel', function () {
     return view('checkout-cancel');
 })->name('checkout.cancel');
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

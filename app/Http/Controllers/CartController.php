@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
@@ -47,39 +48,31 @@ class CartController extends Controller
     // Update cart item quantity and size
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'quantity' => 'required|integer|min:1',
-            'size' => 'required|string'
-        ]);
+        $quantity = $request->input('quantity');
+        $size = $request->input('size');
 
-        $cart = session()->get('cart', []);
-
+        // Update cart session or database as needed
+        $cart = Session::get('cart', []);
         if (isset($cart[$id])) {
-            $cart[$id]['quantity'] = $validated['quantity'];
-            $cart[$id]['size'] = $validated['size'];
-
-            // Optionally log the updated cart data for debugging
-            Log::info('Cart updated:', $cart);
-
-            session()->put('cart', $cart);
-            return response()->json(['message' => 'Cart updated successfully']);
+            $cart[$id]['quantity'] = $quantity;
+            $cart[$id]['size'] = $size;
+            Session::put('cart', $cart);
         }
 
-        return response()->json(['message' => 'Item not found in cart'], 404);
+        return response()->json(['message' => 'Cart updated successfully.']);
     }
 
     // Remove item from cart
-    public function removeFromCart($id)
+    public function remove($id)
     {
-        $cart = session()->get('cart', []);
-
+        // Remove item from cart session or database as needed
+        $cart = Session::get('cart', []);
         if (isset($cart[$id])) {
             unset($cart[$id]);
-            session()->put('cart', $cart);
-            return redirect()->back()->with('success', 'Product removed from cart!');
+            Session::put('cart', $cart);
         }
 
-        return redirect()->back()->with('error', 'Product not found in cart!');
+        return redirect()->back()->with('success', 'Item removed from cart.');
     }
 
     // Get cart item count

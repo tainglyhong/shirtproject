@@ -70,13 +70,37 @@
         <!-- Continue Shopping and Checkout Buttons -->
         <div class="cart-actions">
             <a href="{{ route('Shop') }}" class="btn btn-primary">Continue Shopping</a>
-            <a href="" class="btn btn-success">Checkout</a>
+            <button id="checkout-button" class="btn btn-success">Checkout</button>
         </div>
     </div>
 
-
     <!-- JavaScript for Quantity and Cart Update -->
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
+        document.getElementById('checkout-button').addEventListener('click', function() {
+            fetch('/checkout/create-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    cart: @json($cart)
+                })
+            }).then(response => response.json()).then(sessionId => {
+                var stripe = Stripe('{{ config('services.stripe.key') }}');
+                return stripe.redirectToCheckout({
+                    sessionId: sessionId
+                });
+            }).then(result => {
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
         function updateQuantity(id, delta) {
             let quantityInput = document.getElementById(`quantity-${id}`);
             let currentQuantity = parseInt(quantityInput.value);
